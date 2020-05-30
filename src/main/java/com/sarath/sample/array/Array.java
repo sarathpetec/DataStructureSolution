@@ -18,6 +18,10 @@ public class Array<T> implements Iterable {
     private int length;
     private int actualSize;
 
+    /**
+     * No Argument Constructor
+     */
+
     public Array() {
         this(16);
     }
@@ -32,6 +36,24 @@ public class Array<T> implements Iterable {
         if (initialCapacity < 0) throw new IllegalArgumentException("Initial Capacity Should not be Zero");
         this.actualSize = initialCapacity;
         this.data = (T[]) new Object[initialCapacity];
+    }
+
+    /**
+     *
+     * @return int This return the length of the array of type T
+     */
+    public int size(){
+        return length;
+    }
+
+    /**
+     *
+     * @return boolan This return
+     *         true  if the size of the array type T is Zero
+     *         false if the size of the array type T is greater that Zero
+     */
+    public boolean isEmpty(){
+        return size()==0;
     }
 
 
