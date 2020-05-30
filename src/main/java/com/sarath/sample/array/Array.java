@@ -7,9 +7,9 @@ import java.util.function.Consumer;
 /**
  * This is class is implementing the Array data structure with all requred methid
  *
- * @author  Sarath
+ * @author Sarath
  * @version 1.0
- * @since   2020-05-31
+ * @since 2020-05-31
  */
 
 public class Array<T> implements Iterable {
@@ -17,6 +17,7 @@ public class Array<T> implements Iterable {
     private T data[];
     private int length;
     private int actualSize;
+
 
     /**
      * No Argument Constructor
@@ -28,8 +29,9 @@ public class Array<T> implements Iterable {
 
     /**
      * This constructor will help to create an of of type T with a specified size.
+     *
      * @param initialCapacity This is the initial capacity of the array of type T.
-     * @exception IllegalArgumentException On the initial capacity is 0 of less that that.
+     * @throws IllegalArgumentException On the initial capacity 0 or less that that.
      * @see IllegalArgumentException
      */
     public Array(int initialCapacity) {
@@ -39,21 +41,35 @@ public class Array<T> implements Iterable {
     }
 
     /**
-     *
      * @return int This return the length of the array of type T
      */
-    public int size(){
+    public int size() {
         return length;
     }
 
     /**
-     *
      * @return boolan This return
-     *         true  if the size of the array type T is Zero
-     *         false if the size of the array type T is greater that Zero
+     * true  if the size of the array type T is Zero
+     * false if the size of the array type T is greater that Zero
      */
-    public boolean isEmpty(){
-        return size()==0;
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    /**
+     *
+     * @param index Index to get the Object of type T.
+     * @return T Retrieve the Object T from the given index.
+     * @exception IndexOutOfBoundsException If the index is greater than the length.
+     * @see IndexOutOfBoundsException
+     */
+    public T get(int index) {
+        if (index > size()) throw new IndexOutOfBoundsException("Index "+index+" is out of bound for the actual length "+size());
+        return data[index];
+    }
+
+    public void set(int Index, T data) {
+
     }
 
 
