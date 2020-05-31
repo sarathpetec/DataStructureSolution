@@ -1,7 +1,6 @@
 package com.sarath.sample.array;
 
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -95,24 +94,70 @@ public class Array<T> implements Iterable {
         datas[length++] = element;
     }
 
-    public T removeAt(int index) {
+    public T removeAt(int rmIndex) {
+        if (rmIndex >= length || rmIndex < 0)
+            throw new IndexOutOfBoundsException("The index which you tried is either not valid or reachable");
+        T data = datas[rmIndex];
+        T[] newData = (T[]) new Object[length - 1];
+        for (int i = 0, j = 0; i < length; i++, j++) {
+            if (i == rmIndex) j--;
+            else newData[j] = datas[i];
+        }
+        datas = newData;
+        actualSize = --length;
+        return data;
+    }
 
-        return (T) new Object();
+    public boolean remove(Object obj) {
+        for (int i = 0; i < length; i++) {
+            if (datas[i].equals(obj)) {
+                removeAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int indexOf(Object obj){
+        for (int i=0;i<length;i++){
+            if (datas[i].equals(obj)){
+                return i;
+            }
+        } return -1;
+    }
+
+    public boolean contain(Object obj){
+        return (indexOf(obj) != -1);
     }
 
 
+
+
     @Override
-    public Iterator iterator() {
-        return null;
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            int index = 0;
+            @Override
+            public boolean hasNext() {
+                return index<length;
+            }
+
+            @Override
+            public T next() {
+                return datas[index++];
+            }
+        };
     }
 
     @Override
-    public void forEach(Consumer action) {
-
-    }
-
-    @Override
-    public Spliterator spliterator() {
-        return null;
+    public String toString() {
+        if(length==0) return "[]";
+        else {
+            StringBuilder builder = new StringBuilder(length).append("[");
+            for (int i=0;i<length-1;i++){
+                builder.append(datas[i]).append(",");
+            }
+            return builder.append(datas[length-1]).append("]").toString();
+        }
     }
 }
