@@ -1,8 +1,6 @@
 package com.sarath.sample.array;
 
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 /**
  * This is class is implementing the Array data structure with all requred methid
