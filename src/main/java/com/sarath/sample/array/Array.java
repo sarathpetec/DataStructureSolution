@@ -1,6 +1,7 @@
 package com.sarath.sample.array;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -14,7 +15,7 @@ import java.util.function.Consumer;
 
 public class Array<T> implements Iterable {
 
-    private T data[];
+    private T datas[];
     private int length;
     private int actualSize;
 
@@ -37,7 +38,7 @@ public class Array<T> implements Iterable {
     public Array(int initialCapacity) {
         if (initialCapacity < 0) throw new IllegalArgumentException("Initial Capacity Should not be Zero");
         this.actualSize = initialCapacity;
-        this.data = (T[]) new Object[initialCapacity];
+        this.datas = (T[]) new Object[initialCapacity];
     }
 
     /**
@@ -57,19 +58,46 @@ public class Array<T> implements Iterable {
     }
 
     /**
-     *
      * @param index Index to get the Object of type T.
      * @return T Retrieve the Object T from the given index.
-     * @exception IndexOutOfBoundsException If the index is greater than the length.
+     * @throws IndexOutOfBoundsException If the index is greater than the length.
      * @see IndexOutOfBoundsException
      */
     public T get(int index) {
-        if (index > size()) throw new IndexOutOfBoundsException("Index "+index+" is out of bound for the actual length "+size());
-        return data[index];
+        if (index > size())
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound for the actual length " + size());
+        return datas[index];
     }
 
-    public void set(int Index, T data) {
+    public void set(int index, T object) {
+        if (index > size())
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound for the actual length " + size());
+        datas[index] = object;
+    }
 
+    public void clear() {
+        for (int i = 0; i < actualSize; i++) {
+            datas[i] = null;
+        }
+        length = 0;
+    }
+
+    public void add(T element) {
+        if ((length + 1) >= actualSize) {
+            if (actualSize == 0) actualSize = 1;
+            else actualSize *= 2;
+            T[] newData = (T[]) new Object[actualSize];
+            for (int i = 0; i < length; i++) {
+                newData[i] = datas[i];
+            }
+            datas = newData;
+        }
+        datas[length++] = element;
+    }
+
+    public T removeAt(int index) {
+
+        return (T) new Object();
     }
 
 
