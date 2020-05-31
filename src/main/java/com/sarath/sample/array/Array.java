@@ -41,6 +41,8 @@ public class Array<T> implements Iterable {
     }
 
     /**
+     * This is to return the size of the Array
+     *
      * @return int This return the length of the array of type T
      */
     public int size() {
@@ -48,6 +50,8 @@ public class Array<T> implements Iterable {
     }
 
     /**
+     * This method helps to check whether the Object of type T size is Zero or not.
+     *
      * @return boolan This return
      * true  if the size of the array type T is Zero
      * false if the size of the array type T is greater that Zero
@@ -57,23 +61,39 @@ public class Array<T> implements Iterable {
     }
 
     /**
+     * This is to get the object of type T from the given index
+     *
      * @param index Index to get the Object of type T.
      * @return T Retrieve the Object T from the given index.
-     * @throws IndexOutOfBoundsException If the index is greater than the length.
+     * @throws IndexOutOfBoundsException If the index is greater than the length or less than Zero.
      * @see IndexOutOfBoundsException
      */
     public T get(int index) {
-        if (index > size())
+        if (index > size() || index < 0)
             throw new IndexOutOfBoundsException("Index " + index + " is out of bound for the actual length " + size());
         return datas[index];
     }
 
+
+    /**
+     * This method is to add an object of type T to a specific location.
+     *
+     * @param index  Index to set the Object of type T.
+     * @param object Object to be insert in the particular index.
+     * @throws IndexOutOfBoundsException If the index is greater than the length or less than Zero
+     * @see IndexOutOfBoundsException
+     */
     public void set(int index, T object) {
-        if (index > size())
+        if (index > size() || index < 0)
             throw new IndexOutOfBoundsException("Index " + index + " is out of bound for the actual length " + size());
         datas[index] = object;
     }
 
+    /**
+     * This method is to clear the Object from each location and set the length to Zero
+     *
+     * @return void
+     */
     public void clear() {
         for (int i = 0; i < actualSize; i++) {
             datas[i] = null;
@@ -81,6 +101,16 @@ public class Array<T> implements Iterable {
         length = 0;
     }
 
+    /**
+     * This is to add and object of type T to the next available location.
+     * If the next array size is to be actual size then
+     * there will be a new array of type T will create with double the actual size.
+     * All the element from the old array will be copy to the new array.
+     * Finally the new array reassign to old array.
+     *
+     * @param element
+     * @return void
+     */
     public void add(T element) {
         if ((length + 1) >= actualSize) {
             if (actualSize == 0) actualSize = 1;
@@ -94,6 +124,15 @@ public class Array<T> implements Iterable {
         datas[length++] = element;
     }
 
+
+    /**
+     * This method is to return the object from the given index.
+     *
+     * @param rmIndex
+     * @return Object of type T will return.
+     * @throws IndexOutOfBoundsException If the index is greater than the length or less than Zero
+     * @see IndexOutOfBoundsException
+     */
     public T removeAt(int rmIndex) {
         if (rmIndex >= length || rmIndex < 0)
             throw new IndexOutOfBoundsException("The index which you tried is either not valid or reachable");
@@ -108,6 +147,14 @@ public class Array<T> implements Iterable {
         return data;
     }
 
+    /**
+     * This is to remove an object by checking the equality with each index of the array of type T.
+     *
+     * @param obj
+     * @return boolean
+     * true if the object is available and able to remove.
+     * false if it is not available
+     */
     public boolean remove(Object obj) {
         for (int i = 0; i < length; i++) {
             if (datas[i].equals(obj)) {
@@ -118,28 +165,44 @@ public class Array<T> implements Iterable {
         return false;
     }
 
-    public int indexOf(Object obj){
-        for (int i=0;i<length;i++){
-            if (datas[i].equals(obj)){
+    /**
+     * This is to return the index of the object of type T passed as an argument.
+     *
+     * @param obj
+     * @return Object location if the object is available otherwise will return -1.
+     */
+    public int indexOf(Object obj) {
+        for (int i = 0; i < length; i++) {
+            if (datas[i].equals(obj)) {
                 return i;
             }
-        } return -1;
+        }
+        return -1;
     }
 
-    public boolean contain(Object obj){
+    /**
+     * Thsi is to check the object is present in the array.
+     *
+     * @param obj
+     * @return true if it is available otherwise fale.
+     */
+    public boolean contain(Object obj) {
         return (indexOf(obj) != -1);
     }
 
-
-
-
+    /**
+     * This class implements Iterable interface is used to iterate over the elements in a collection.
+     *
+     * @return Iterator of type T.
+     */
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
             int index = 0;
+
             @Override
             public boolean hasNext() {
-                return index<length;
+                return index < length;
             }
 
             @Override
@@ -149,15 +212,20 @@ public class Array<T> implements Iterable {
         };
     }
 
+    /**
+     * This is the toString method which will print the object in the console or log file.
+     *
+     * @return string
+     */
     @Override
     public String toString() {
-        if(length==0) return "[]";
+        if (length == 0) return "[]";
         else {
             StringBuilder builder = new StringBuilder(length).append("[");
-            for (int i=0;i<length-1;i++){
+            for (int i = 0; i < length - 1; i++) {
                 builder.append(datas[i]).append(",");
             }
-            return builder.append(datas[length-1]).append("]").toString();
+            return builder.append(datas[length - 1]).append("]").toString();
         }
     }
 }
