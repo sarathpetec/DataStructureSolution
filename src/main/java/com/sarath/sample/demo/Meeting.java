@@ -88,47 +88,116 @@ public class Meeting {
 
     class RestTimeCalculator {
 
-        private List<Integer> startTime;
-        private List<Integer> endTime;
+        private List<Integer> currentNode;
+        private List<Integer> previousNode;
         private String startMeetingDay;
         private String endMeetingDay;
+        private String startRestDay;
+        private String endRestDay;
         private boolean isMeetingAvailableForDay;
-        private boolean isThisTheFirstMeetingOfTheWeek;
-        private boolean isThisTheLastMeetingOfTheWeek;
+        private boolean isThisFirstMeetingOfWeek;
+        private boolean isThisLastMeetingOfWeek;
+        private boolean isFirstMeetingOfTheDay;
+        private boolean isLastMeetingOfTheDay;
 
-        private int maxRestTime, currentInterval, maxMinPerDay = 24 * 60;
-        String restStartDay, restEndDay;
+        private int maxRestTime, currentInterval;
+        private final int MAX_MINUTE_PER_DAY = 1440;
 
-        public RestTimeCalculator(List<Integer> startTime, List<Integer> endTime, String startMeetingDay,
-                                  String endMeetingDay, boolean isMeetingAvailableForDay, boolean isThisTheFirstMeetingOfTheWeek, boolean isThisTheLastMeetingOfTheWeek) {
-            this.startTime = startTime;
-            this.endTime = endTime;
+        public RestTimeCalculator(List<Integer> currentNode, List<Integer> previousNode, String startMeetingDay,
+                                  String endMeetingDay, String startRestDay, String endRestDay, boolean isMeetingAvailableForDay, boolean isThisFirstMeetingOfWeek,
+                                  boolean isThisLastMeetingOfWeek, boolean isFirstMeetingOfTheDay, boolean isLastMeetingOfTheDay) {
+            this.currentNode = currentNode;
+            this.previousNode = previousNode;
             this.startMeetingDay = startMeetingDay;
             this.endMeetingDay = endMeetingDay;
             this.isMeetingAvailableForDay = isMeetingAvailableForDay;
-            this.isThisTheFirstMeetingOfTheWeek = isThisTheFirstMeetingOfTheWeek;
-            this.isThisTheLastMeetingOfTheWeek = isThisTheLastMeetingOfTheWeek;
+            this.isThisFirstMeetingOfWeek = isThisFirstMeetingOfWeek;
+            this.isThisLastMeetingOfWeek = isThisLastMeetingOfWeek;
+            this.isFirstMeetingOfTheDay = isFirstMeetingOfTheDay;
+            this.isLastMeetingOfTheDay = isLastMeetingOfTheDay;
+            this.startRestDay = startRestDay;
+            this.endRestDay = endRestDay;
         }
 
         public void calculateRestTime() {
-            if (isMeetingAvailableForDay){
-                if (isThisTheFirstMeetingOfTheWeek) {
-                    currentInterval = startTime.get(0);
-                    updateMaxRestTime(currentInterval);
-                } else if (isThisTheLastMeetingOfTheWeek) {
-
+            if (isMeetingAvailableForDay) {
+                if (isThisFirstMeetingOfWeek && Objects.isNull(previousNode)) {
+                    currentInterval = currentNode.get(0);
+                    updateMaxRestTime(currentInterval, startRestDay, endRestDay);
+                    previousNode = currentNode;
+                } else if (isThisLastMeetingOfWeek) {
+                    currentInterval = getRemainingMinuteAfterLastNode(currentNode.get(1), endMeetingDay);
+                    updateMaxRestTime(currentInterval, startRestDay, endRestDay);
+                } else if (isFirstMeetingOfTheDay) {
+                    currentInterval = currentNode.get(0);
+                    updateMaxRestTime(currentInterval, startRestDay, endRestDay);
+                } else if (isLastMeetingOfTheDay) {
+                    currentInterval = calculateRemainingTime(currentNode.get(1), 0);
+                    updateMaxRestTime(currentInterval, startRestDay, endRestDay);
                 } else {
-
+                    currentInterval = currentNode.get(0) - previousNode.get(1);
+                    updateMaxRestTime(currentInterval, startRestDay, endRestDay);
                 }
-
             } else {
-                updateMaxRestTime(maxMinPerDay);
+                updateMaxRestTime(MAX_MINUTE_PER_DAY, startRestDay, endRestDay);
             }
 
         }
 
-        private void updateMaxRestTime(int currentInterval){
+        private void printRestTime(){
+            System.out.println("James can sleep "+maxRestTime+" minutes from "+startRestDay+" to "+endRestDay);
+        }
+
+        private void updateMaxRestTime(int currentInterval, String startRestDayName, String endRestDayName) {
             maxRestTime = maxRestTime + currentInterval;
+            this.startRestDay=startRestDayName;
+            this.endRestDay=endRestDayName;
+
+        }
+
+
+        private int getRemainingMinuteAfterLastNode(int endTimeInMinute, String day) {
+            int remainingTime = 0;
+            switch (day) {
+                case "Sun": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 6);
+                    break;
+                }
+                case "Mon": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 5);
+                    break;
+                }
+                case "Tue": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 4);
+                    break;
+                }
+                case "Wed": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 3);
+                    break;
+                }
+                case "Thu": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 2);
+                    break;
+                }
+                case "Fri": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 1);
+                    break;
+                }
+                case "Sat": {
+                    remainingTime = calculateRemainingTime(endTimeInMinute, 0);
+                    break;
+                }
+                default: {
+                    System.out.println("Unexpected Case");
+                }
+            }
+
+            return remainingTime;
+        }
+
+        private int calculateRemainingTime(int endTime, int remainingDays){
+            int remainingMinOfTheDay = MAX_MINUTE_PER_DAY - endTime;
+            return remainingMinOfTheDay + MAX_MINUTE_PER_DAY * remainingDays;
         }
 
     }
