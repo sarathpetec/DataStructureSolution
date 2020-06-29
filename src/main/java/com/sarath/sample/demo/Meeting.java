@@ -92,21 +92,43 @@ public class Meeting {
         private List<Integer> endTime;
         private String startMeetingDay;
         private String endMeetingDay;
-        private boolean isMeetingAvailable;
+        private boolean isMeetingAvailableForDay;
+        private boolean isThisTheFirstMeetingOfTheWeek;
+        private boolean isThisTheLastMeetingOfTheWeek;
 
-        private int maxRestTime;
+        private int maxRestTime, currentInterval, maxMinPerDay = 24 * 60;
+        String restStartDay, restEndDay;
 
         public RestTimeCalculator(List<Integer> startTime, List<Integer> endTime, String startMeetingDay,
-                                  String endMeetingDay, boolean isMeetingAvailable) {
+                                  String endMeetingDay, boolean isMeetingAvailableForDay, boolean isThisTheFirstMeetingOfTheWeek, boolean isThisTheLastMeetingOfTheWeek) {
             this.startTime = startTime;
             this.endTime = endTime;
             this.startMeetingDay = startMeetingDay;
             this.endMeetingDay = endMeetingDay;
-            this.isMeetingAvailable = isMeetingAvailable;
+            this.isMeetingAvailableForDay = isMeetingAvailableForDay;
+            this.isThisTheFirstMeetingOfTheWeek = isThisTheFirstMeetingOfTheWeek;
+            this.isThisTheLastMeetingOfTheWeek = isThisTheLastMeetingOfTheWeek;
         }
 
         public void calculateRestTime() {
+            if (isMeetingAvailableForDay){
+                if (isThisTheFirstMeetingOfTheWeek) {
+                    currentInterval = startTime.get(0);
+                    updateMaxRestTime(currentInterval);
+                } else if (isThisTheLastMeetingOfTheWeek) {
 
+                } else {
+
+                }
+
+            } else {
+                updateMaxRestTime(maxMinPerDay);
+            }
+
+        }
+
+        private void updateMaxRestTime(int currentInterval){
+            maxRestTime = maxRestTime + currentInterval;
         }
 
     }
